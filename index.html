@@ -2,236 +2,249 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>WaffPalo</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>WaffPalo App</title>
 <style>
-* {
-  box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+:root { 
+    --primary: #ff9800; 
+    --primary-dark: #e68900;
+    --bg: #f2f2f7; 
+    --card: #ffffff;
+    --text: #1c1c1e; 
+    --text-sec: #8e8e93;
 }
 
-body {
-  margin: 0;
-  background: #f2f2f2;
+* { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; }
+
+body { 
+    margin: 0; 
+    background: var(--bg); 
+    color: var(--text);
+    display: flex;
+    justify-content: center;
 }
 
-.app {
-  max-width: 420px;
-  margin: auto;
-  min-height: 100vh;
-  background: #ffffff;
-  display: flex;
-  flex-direction: column;
+/* App Container */
+.app { 
+    width: 100%;
+    max-width: 420px; 
+    min-height: 100vh; 
+    background: var(--bg); 
+    display: flex; 
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
-/* HEADER */
-.header {
-  padding: 18px;
-  background: #ff9800;
-  color: white;
-  text-align: center;
+/* Status Bar Simulation */
+.status-bar {
+    height: 24px;
+    background: var(--primary);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    align-items: center;
+    color: white;
+    font-size: 12px;
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 24px;
+/* Header */
+.header { 
+    padding: 25px 20px; 
+    background: var(--primary); 
+    color: white; 
+    border-radius: 0 0 25px 25px;
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+}
+.header h1 { margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+.header p { margin: 5px 0 0; opacity: 0.9; font-size: 14px; }
+
+/* Content Scroll Area */
+.content { 
+    padding: 20px; 
+    padding-bottom: 120px; /* Space for footer */
 }
 
-.header p {
-  margin-top: 4px;
-  font-size: 13px;
+.section-title { 
+    font-size: 18px; 
+    margin: 20px 0 12px; 
+    font-weight: 700; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* CONTENT */
-.content {
-  padding: 16px;
-  flex: 1;
+/* Flavor Cards */
+.flavor-nav { 
+    display: flex; 
+    overflow-x: auto; 
+    padding: 5px 0 15px; 
+    gap: 12px; 
+    scrollbar-width: none; 
 }
+.flavor-nav::-webkit-scrollbar { display: none; }
 
-/* CARD */
-.card {
-  background: white;
-  border-radius: 14px;
-  padding: 14px;
-  margin-bottom: 14px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+.flavor-card { 
+    flex: 0 0 130px; 
+    background: var(--card);
+    text-align: center; 
+    border-radius: 20px; 
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
+.flavor-card img { width: 80px; height: 80px; object-fit: cover; border-radius: 50%; margin-bottom: 10px; background: #fdfdfd; border: 2px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.flavor-card.active { transform: translateY(-5px); background: var(--primary); color: white; }
+.flavor-card.active span { color: rgba(255,255,255,0.8); }
+.flavor-card p { margin: 0; font-size: 15px; font-weight: 700; }
+.flavor-card span { font-size: 13px; color: var(--text-sec); }
 
-.card h3 {
-  margin: 0 0 10px;
-  font-size: 16px;
+/* Add-ons */
+.addon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.addon-item { 
+    background: var(--card); 
+    padding: 16px; 
+    border-radius: 18px; 
+    display: flex; 
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
+.addon-item.selected { background: #fff3e0; border: 2px solid var(--primary); }
+.addon-item .emoji { font-size: 24px; }
+.addon-item .name { font-size: 14px; font-weight: 600; }
 
-/* INPUTS */
-select, textarea {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
-  font-size: 15px;
+/* Sticky Footer Button */
+.footer { 
+    padding: 20px; 
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(0,0,0,0.05); 
+    position: fixed; 
+    bottom: 0; 
+    width: 100%;
+    max-width: 420px;
 }
-
-textarea {
-  resize: none;
-  height: 60px;
+.btn { 
+    width: 100%; 
+    padding: 18px; 
+    border-radius: 18px; 
+    border: none; 
+    background: var(--primary); 
+    color: white; 
+    font-size: 17px; 
+    font-weight: 700; 
+    cursor: pointer; 
+    box-shadow: 0 8px 20px rgba(255, 152, 0, 0.4);
+    transition: transform 0.1s;
 }
-
-/* QTY */
-.qty {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 10px;
-}
-
-.qty button {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  background: #ff9800;
-  color: white;
-  font-size: 20px;
-}
-
-.qty span {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-/* BUTTON */
-.btn {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  background: #ff9800;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-/* CART */
-.cart-item {
-  font-size: 14px;
-  margin-bottom: 6px;
-}
-
-/* FOOTER */
-.footer {
-  padding: 14px;
-  border-top: 1px solid #eee;
-}
+.btn:active { transform: scale(0.97); }
 </style>
 </head>
-
 <body>
 
 <div class="app">
+  <div class="status-bar">
+    <span>9:41</span>
+    <span>📶 🔋</span>
+  </div>
 
-  <!-- HEADER -->
   <div class="header">
-    <h1>🧇 WaffPalo</h1>
-    <p>Palo sa sarap, palo sa presyo</p>
+    <h1>WaffPalo</h1>
+    <p>Premium Waffles at your fingertips</p>
   </div>
 
-  <!-- CONTENT -->
   <div class="content">
-
-    <!-- ORDER -->
-    <div class="card">
-      <h3>Select Waffle</h3>
-      <select id="waffle">
-        <option value="50">Classic – ₱50</option>
-        <option value="70">Chocolate – ₱70</option>
-        <option value="80">Strawberry – ₱80</option>
-        <option value="90">Banana Nut – ₱90</option>
-      </select>
-
-      <div class="qty">
-        <button onclick="changeQty(-1)">−</button>
-        <span id="qty">1</span>
-        <button onclick="changeQty(1)">+</button>
+    <div class="section-title">Select Flavor</div>
+    <div class="flavor-nav">
+      <div class="flavor-card active" onclick="selectWaffle(this, 'Classic', 15)">
+        <img src="classic.png" alt="Classic">
+        <p>Classic</p><span>₱15</span>
       </div>
-
-      <textarea id="notes" placeholder="Special request (optional)"></textarea>
-
-      <button class="btn" onclick="addToCart()">Add to Cart</button>
+      <div class="flavor-card" onclick="selectWaffle(this, 'Chocolate', 20)">
+        <img src="chocolate.png" alt="Chocolate">
+        <p>Chocolate</p><span>₱20</span>
+      </div>
+      <div class="flavor-card" onclick="selectWaffle(this, 'Strawberry', 25)">
+        <img src="strawberry.png" alt="Strawberry">
+        <p>Strawberry</p><span>₱25</span>
+      </div>
     </div>
 
-    <!-- CART -->
-    <div class="card">
-      <h3>🛒 Your Cart</h3>
-      <div id="cart">Cart is empty</div>
-      <p id="total"><strong>Total: ₱0</strong></p>
+    <div class="section-title">
+        Add-ons 
+        <span style="font-size: 12px; color: var(--primary);">+₱5 each</span>
     </div>
-
+    <div class="addon-grid">
+      <div class="addon-item" onclick="toggleAddon(this, 'Extra Cheese')">
+        <span class="emoji">🧀</span>
+        <span class="name">Cheese</span>
+      </div>
+      <div class="addon-item" onclick="toggleAddon(this, 'Maple Syrup')">
+        <span class="emoji">🍯</span>
+        <span class="name">Maple</span>
+      </div>
+      <div class="addon-item" onclick="toggleAddon(this, 'Sprinkles')">
+        <span class="emoji">✨</span>
+        <span class="name">Sprinkles</span>
+      </div>
+      <div class="addon-item" onclick="toggleAddon(this, 'Mallows')">
+        <span class="emoji">☁️</span>
+        <span class="name">Mallows</span>
+      </div>
+    </div>
   </div>
 
-  <!-- FOOTER -->
   <div class="footer">
-    <button class="btn" onclick="placeOrder()">Place Order</button>
+    <button class="btn" onclick="placeOrder()">Place Order • ₱<span id="totalDisplay">15</span></button>
   </div>
-
 </div>
 
 <script>
-let quantity = 1;
-let cart = [];
+let selectedWaffle = { name: "Classic", price: 15 };
+let selectedAddons = [];
 
-function changeQty(n) {
-  quantity += n;
-  if (quantity < 1) quantity = 1;
-  document.getElementById("qty").innerText = quantity;
+function selectWaffle(el, name, price) {
+    document.querySelectorAll('.flavor-card').forEach(card => card.classList.remove('active'));
+    el.classList.add('active');
+    selectedWaffle = { name, price };
+    updateTotal();
 }
 
-function addToCart() {
-  const waffle = document.getElementById("waffle");
-  const price = Number(waffle.value);
-  const name = waffle.options[waffle.selectedIndex].text;
-  const notes = document.getElementById("notes").value;
-
-  cart.push({ name, price, quantity, notes });
-  quantity = 1;
-  document.getElementById("qty").innerText = 1;
-  document.getElementById("notes").value = "";
-  renderCart();
+function toggleAddon(el, name) {
+    el.classList.toggle('selected');
+    if (selectedAddons.includes(name)) {
+        selectedAddons = selectedAddons.filter(item => item !== name);
+    } else {
+        selectedAddons.push(name);
+    }
+    updateTotal();
 }
 
-function renderCart() {
-  let html = "";
-  let total = 0;
-
-  cart.forEach(item => {
-    total += item.price * item.quantity;
-    html += `<div class="cart-item">
-      ${item.quantity}× ${item.name}
-      ${item.notes ? `<br><small>📝 ${item.notes}</small>` : ""}
-    </div>`;
-  });
-
-  document.getElementById("cart").innerHTML = html || "Cart is empty";
-  document.getElementById("total").innerHTML = "<strong>Total: ₱" + total + "</strong>";
+function updateTotal() {
+    const addonsCost = selectedAddons.length * 5;
+    const total = selectedWaffle.price + addonsCost;
+    document.getElementById("totalDisplay").innerText = total;
 }
 
-function placeOrder() {
-  if (cart.length === 0) {
-    alert("Your cart is empty.");
-    return;
-  }
+async function placeOrder() {
+    const total = selectedWaffle.price + (selectedAddons.length * 5);
+    const addonText = selectedAddons.length > 0 ? selectedAddons.join(", ") : "None";
 
-  let message = "🧇 WaffPalo Order%0A";
-  cart.forEach(i => {
-    message += `${i.quantity}x ${i.name}%0A`;
-    if (i.notes) message += `Notes: ${i.notes}%0A`;
-  });
+    const message = `*WAFFPALO APP ORDER*\n\nFlavor: ${selectedWaffle.name}\nAdd-ons: ${addonText}\nTotal: ₱${total}`;
 
-  window.open("https://m.me/YOUR_PAGE_USERNAME?ref=" + message, "_blank");
+    try {
+        await navigator.clipboard.writeText(message);
+        alert("Order details copied!");
+        window.open(`https://m.me/Waffpalo`, "_blank");
+    } catch (err) {
+        console.error('Copy failed', err);
+    }
 }
 </script>
-
 </body>
 </html>
